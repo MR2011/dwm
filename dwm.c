@@ -2135,10 +2135,24 @@ zoom(const Arg *arg)
 int
 main(int argc, char *argv[])
 {
-	if (argc == 2 && !strcmp("-v", argv[1]))
-		die("dwm-"VERSION);
-	else if (argc != 1)
-		die("usage: dwm [-v]");
+        for(int i=1;i<argc;i+=1)
+		if (!strcmp("-v", argv[i]))
+			die("dwm-"VERSION);
+		else if (!strcmp("-h", argv[i]) || !strcmp("--help", argv[i]))
+	    		die("usage: dwm [-hv] [-nbg color] [-nfg color] \
+			[-nb color]\n [-sbg color] [-sfg color] [-sb color]\n");
+                else if (!strcmp("-nbg",argv[i])) /* normal background color */
+                        colors[SchemeNorm][1] = argv[++i];
+                else if (!strcmp("-nfg",argv[i])) /* normal foreground color */
+                        colors[SchemeNorm][0] = argv[++i];
+                else if (!strcmp("-nb",argv[i])) /* normal border color */
+                        colors[SchemeNorm][2] = argv[++i];
+                else if (!strcmp("-sbg",argv[i])) /* selected background color */
+                        colors[SchemeSel][1] = argv[++i];
+                else if (!strcmp("-sfg",argv[i])) /* selected foreground color */
+                        colors[SchemeSel][0] = argv[++i];
+                else if (!strcmp("-sb",argv[i])) /* selected border color */
+                        colors[SchemeSel][2] = argv[++i];
 	if (!setlocale(LC_CTYPE, "") || !XSupportsLocale())
 		fputs("warning: no locale support\n", stderr);
 	if (!(dpy = XOpenDisplay(NULL)))
